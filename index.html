@@ -1,0 +1,914 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>공기의 힘 탐험 | 어게인 실험과학 수학학원</title>
+<meta name="description" content="손으로 만지며 알아보는 바람, 공기압, 공기대포 탐험 놀이">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --sky:#e3f4fd; --sky2:#bfe4fb; --blue:#3a9ae0; --blue-d:#2476b8; --cloud:#ffffff;
+  --red:#ff5a5f; --red-d:#d63a40; --red-s:#ffe6e6;
+  --mint:#dcf5ea; --mint2:#8fdcb8; --mint-d:#2f9e6e;
+  --ink:#33414f; --sub:#6c7a8a; --line:#d3e7f5;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;color:var(--ink);font-family:"Noto Sans KR",system-ui,sans-serif;font-weight:500}
+body{min-height:100vh;display:flex;flex-direction:column;-webkit-user-select:none;user-select:none;
+  background:radial-gradient(circle at 10% 16%,#fff 0 58px,transparent 59px),radial-gradient(circle at 16% 12%,#fff 0 40px,transparent 41px),
+  radial-gradient(circle at 90% 34%,#fff 0 50px,transparent 51px),radial-gradient(circle at 85% 31%,#fff 0 34px,transparent 35px),var(--sky)}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+
+.bbtn{font-family:"Jua",sans-serif;font-size:22px;min-height:62px;min-width:150px;padding:10px 28px;color:#fff;background:var(--blue);border-radius:999px;
+  box-shadow:inset 0 -6px 0 rgba(0,0,0,.12),0 5px 0 var(--blue-d);word-break:keep-all}
+.bbtn:active{transform:translateY(3px)}
+.bbtn:disabled{opacity:.35;cursor:default}
+.bbtn.red{background:var(--red);box-shadow:inset 0 -6px 0 rgba(0,0,0,.1),0 5px 0 var(--red-d)}
+.bbtn.white{background:#fff;color:var(--blue-d);box-shadow:inset 0 -6px 0 rgba(0,0,0,.05),0 5px 0 var(--line)}
+.bbtn.white.on{background:#fff3c4;color:#8a6400;box-shadow:inset 0 -6px 0 rgba(0,0,0,.06),0 5px 0 #e8c95a}
+.bbtn.pulse{animation:pulse 1.2s infinite}
+.bbtn[hidden]{display:none}
+
+header{position:sticky;top:0;z-index:30;background:var(--cloud);box-shadow:0 3px 0 var(--line);padding:10px 16px}
+.head-in{max-width:1100px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.logo{width:48px;height:54px;flex:none}
+.titles{flex:1;min-width:0}
+.titles .brand{font-family:"Jua",sans-serif;font-size:16px;color:var(--sub)}
+.titles h1{margin:0;font-family:"Jua",sans-serif;font-weight:400;font-size:clamp(24px,4vw,34px);color:var(--red-d);line-height:1.15}
+.share{min-width:0;font-size:18px;min-height:54px;padding:8px 22px;display:flex;align-items:center;gap:6px}
+
+nav{max-width:1100px;width:100%;margin:14px auto 0;padding:0 16px;display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.tab{position:relative;min-height:64px;border-radius:20px;background:#fff;font-family:"Jua",sans-serif;font-size:clamp(15px,1.9vw,19px);line-height:1.2;padding:6px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:3px solid transparent;box-shadow:0 3px 0 var(--line);word-break:keep-all;text-align:center}
+.tab .n{width:24px;height:24px;border-radius:50%;background:var(--sky2);color:var(--blue-d);font-size:14px;display:grid;place-items:center}
+.tab.on{background:var(--red-s);border-color:var(--red)}
+.tab.on .n{background:var(--red);color:#fff}
+.tab .star{position:absolute;top:-10px;right:-4px;font-size:22px;display:none}
+.tab.done .star{display:block;animation:pop .5s}
+
+main{flex:1;max-width:1100px;width:100%;margin:0 auto;padding:16px}
+.panel{display:none;animation:fadein .3s}
+.panel.on{display:block}
+.coach{display:flex;align-items:flex-end;gap:10px;margin:4px 0 12px}
+.coach svg{width:70px;height:78px;flex:none;animation:float 2.4s ease-in-out infinite}
+.bubble{position:relative;flex:1;background:#fff;border:3px solid var(--sky2);border-radius:22px;padding:12px 18px;font-family:"Jua",sans-serif;
+  font-size:clamp(18px,2.4vw,24px);line-height:1.45;word-break:keep-all;min-height:58px}
+.bubble::before{content:"";position:absolute;left:-14px;bottom:16px;border:10px solid transparent;border-right:14px solid var(--sky2);border-left:0}
+.bubble b{font-weight:400;color:var(--red-d)}
+.bubble.new{animation:pop .4s}
+.card{display:none;margin:16px auto 0;max-width:880px;border-radius:24px;background:var(--mint);border:4px solid var(--mint2);padding:16px 20px;
+  font-family:"Jua",sans-serif;font-size:clamp(19px,2.5vw,24px);text-align:center;line-height:1.5;color:#1f6b4b;word-break:keep-all}
+.card.on{display:block;animation:pop .5s}
+.card .big{display:block;font-size:1.3em;color:#17603f}
+.stage{position:relative;width:100%;border-radius:28px;overflow:hidden;touch-action:none;box-shadow:0 6px 0 var(--line);background:#f4fbff}
+.stage>svg{display:block;width:100%;height:auto;touch-action:none}
+.row{display:flex;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.counter{position:absolute;top:3.5%;font-family:"Jua",sans-serif;font-size:clamp(17px,2.8vw,30px);background:#fff;border-radius:18px;padding:5px 16px;box-shadow:0 3px 0 var(--line);z-index:4}
+.counter b{color:var(--red-d);font-weight:400;font-size:1.25em}
+.meter{position:absolute;right:2.5%;bottom:4%;z-index:4;background:#fff;border-radius:18px;padding:6px 14px;box-shadow:0 3px 0 var(--line);font-family:"Jua",sans-serif;
+  font-size:clamp(14px,2vw,20px);display:flex;align-items:center;gap:10px}
+.meter .bar{width:clamp(70px,12vw,140px);height:16px;border-radius:99px;background:var(--sky);overflow:hidden}
+.meter .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#7cc4ee,var(--red));border-radius:99px}
+.meter .word{min-width:4.2em;color:var(--blue-d)}
+.hint{position:absolute;font-family:"Jua",sans-serif;font-size:clamp(14px,2.1vw,21px);color:#a33238;background:#fff;border:3px solid var(--red);border-radius:999px;padding:4px 14px;
+  animation:bob 1s infinite;z-index:5;white-space:nowrap;pointer-events:none;transform:translateX(-50%)}
+.hint[hidden]{display:none}
+.wl{fill:none;stroke-linecap:round}
+.air{fill:none;stroke:#7cc4ee;stroke-width:12;stroke-linecap:round;stroke-dasharray:46 34;animation:flowmove .35s linear infinite}
+.flicker{transform-box:fill-box;transform-origin:50% 100%;animation:flick .18s ease-in-out infinite alternate}
+.smoke path{fill:none;stroke:#a9b3bd;stroke-width:7;stroke-linecap:round;opacity:0}
+.smoke.on path{animation:smoke 1.8s ease-out forwards}
+.smoke.on path:nth-child(2){animation-delay:.25s}.smoke.on path:nth-child(3){animation-delay:.5s}
+.cap{position:absolute;left:50%;top:3.5%;transform:translateX(-50%);background:#fff3c4;border:3px solid #ffd666;border-radius:999px;padding:5px 16px;font-family:"Jua",sans-serif;
+  font-size:clamp(14px,2vw,21px);white-space:nowrap;z-index:5}
+.cap[hidden]{display:none}
+
+/* 퀴즈 */
+.tray{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;min-height:40px}
+.qcard{background:#fff;border-radius:22px;border:4px solid var(--sky2);box-shadow:0 4px 0 var(--line);padding:8px 6px 10px;text-align:center;touch-action:none;cursor:grab;
+  font-family:"Jua",sans-serif;font-size:clamp(15px,1.9vw,19px);line-height:1.3;word-break:keep-all;position:relative;z-index:1}
+.qcard svg{width:min(100%,96px);height:auto;display:block;margin:0 auto 4px;pointer-events:none}
+.qcard span{pointer-events:none}
+.qcard.drag{z-index:40;border-color:var(--red);box-shadow:0 14px 20px rgba(0,0,0,.18);cursor:grabbing}
+.qcard.back{transition:transform .35s cubic-bezier(.3,1.4,.5,1)}
+.qcard.placed{cursor:default;border-color:var(--mint2);width:calc(25% - 8px);min-width:110px;font-size:clamp(13px,1.5vw,16px);animation:pop .4s}
+.qcard.placed svg{width:62px}
+.bins{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:18px}
+.bin{border-radius:26px;border:5px dashed var(--sky2);background:#fff;min-height:250px;padding:12px;transition:.15s}
+.bin h3{margin:0 0 10px;font-family:"Jua",sans-serif;font-weight:400;font-size:clamp(20px,2.7vw,27px);text-align:center;word-break:keep-all}
+.bin[data-k=wind]{background:#f0f9ff}
+.bin[data-k=wind] h3{color:var(--blue-d)}
+.bin[data-k=press]{background:#fff4f4;border-color:#ffc4c6}
+.bin[data-k=press] h3{color:var(--red-d)}
+.bin.over{transform:scale(1.03);border-style:solid;border-color:var(--red)}
+.got{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+.qfb{min-height:64px;margin:14px auto 0;max-width:880px;border-radius:20px;padding:10px 16px;font-family:"Jua",sans-serif;font-size:clamp(18px,2.4vw,23px);
+  text-align:center;line-height:1.4;word-break:keep-all;display:flex;align-items:center;justify-content:center;background:#fff;color:var(--sub)}
+.qfb.good{background:var(--mint);color:#1f6b4b;animation:pop .4s}
+.qfb.bad{background:#fff3c4;color:#8a6400;animation:shake .4s}
+
+footer{margin-top:28px;background:var(--blue-d);color:#fff;text-align:center;padding:20px 16px 26px}
+footer .brand{font-family:"Jua",sans-serif;font-size:22px}
+footer .tel{margin-top:4px;font-size:18px}
+.toast{position:fixed;left:50%;bottom:30px;transform:translate(-50%,40px);opacity:0;background:var(--ink);color:#fff;font-family:"Jua",sans-serif;font-size:20px;padding:14px 26px;border-radius:999px;z-index:70;transition:.25s;pointer-events:none}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:60}
+.fly{position:fixed;left:-160px;width:130px;z-index:58;pointer-events:none;animation:flyx linear forwards}
+.fly svg{display:block;width:100%;height:auto}
+.fly .spin{transform-box:fill-box;transform-origin:50% 50%;animation:spin .6s linear infinite}
+.fly .spin.r{animation-direction:reverse}
+
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}}
+@keyframes pop{0%{transform:scale(.7)}60%{transform:scale(1.07)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+@keyframes bob{50%{margin-top:-6px}}
+@keyframes float{50%{transform:translateY(-6px) rotate(2deg)}}
+@keyframes pulse{50%{transform:scale(1.06)}}
+@keyframes flowmove{to{stroke-dashoffset:-80}}
+@keyframes flick{from{transform:scaleY(.94) skewX(-2deg)}to{transform:scaleY(1.05) skewX(2deg)}}
+@keyframes smoke{0%{opacity:.8;transform:translateY(0)}100%{opacity:0;transform:translateY(-120px)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes flyx{to{transform:translate(calc(100vw + 320px),var(--dy))}}
+@media (max-width:760px){
+  nav{grid-template-columns:repeat(3,1fr);gap:6px}
+  .tab{font-size:14px;min-height:58px;border-radius:14px}
+  .share span{display:none}
+  .share{padding:8px 16px}
+  .titles .brand{font-size:13px}
+  .coach svg{width:54px;height:60px}
+  .tray{grid-template-columns:repeat(2,1fr)}
+  .bins{grid-template-columns:1fr}
+  .qcard.placed{width:calc(50% - 8px)}
+  .meter .word{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<header>
+  <div class="head-in">
+    <svg class="logo" viewBox="0 0 120 130" aria-hidden="true"><use href="#char"/></svg>
+    <div class="titles">
+      <div class="brand">어게인 실험과학 수학학원</div>
+      <h1>🎈 공기의 힘 탐험!</h1>
+    </div>
+    <button class="bbtn white share" id="share" aria-label="공유하기">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2476b8" stroke-width="2.6" stroke-linecap="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>
+      <span>공유하기</span>
+    </button>
+  </div>
+</header>
+
+<!-- 길잡이 풍선 '빵빵이' 와 공용 그림 -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <g id="char">
+      <path d="M60 104 Q50 116 62 128" stroke="#9aa8b5" stroke-width="3" fill="none"/>
+      <ellipse cx="60" cy="54" rx="42" ry="48" fill="#ff5a5f"/>
+      <path d="M53 100 H67 L63 108 H57Z" fill="#d63a40"/>
+      <ellipse cx="42" cy="32" rx="9" ry="15" fill="#fff" opacity=".45" transform="rotate(-28 42 32)"/>
+      <circle cx="46" cy="54" r="5.5" fill="#33414f"/><circle cx="74" cy="54" r="5.5" fill="#33414f"/>
+      <circle cx="47.6" cy="52.4" r="1.8" fill="#fff"/><circle cx="75.6" cy="52.4" r="1.8" fill="#fff"/>
+      <path d="M50 68 Q60 77 70 68" stroke="#33414f" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+      <circle cx="36" cy="66" r="6" fill="#ffb3b5" opacity=".7"/><circle cx="84" cy="66" r="6" fill="#ffb3b5" opacity=".7"/>
+    </g>
+    <g id="glove">
+      <rect x="-175" y="-28" width="96" height="56" rx="16" fill="#7cc4ee"/>
+      <rect x="-94" y="-34" width="24" height="68" rx="10" fill="#fff" stroke="#c4ccd6" stroke-width="4"/>
+      <path d="M-74 -42 Q-40 -60 -6 -46 Q8 -30 6 0 Q8 30 -6 46 Q-40 60 -74 42Z" fill="#fff" stroke="#c4ccd6" stroke-width="4"/>
+      <path d="M-30 -22 H-6 M-30 0 H-2 M-30 22 H-6" stroke="#e1e5ea" stroke-width="4" stroke-linecap="round"/>
+      <ellipse cx="-44" cy="-52" rx="17" ry="11" fill="#fff" stroke="#c4ccd6" stroke-width="4" transform="rotate(-20 -44 -52)"/>
+    </g>
+    <filter id="fog" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5"/></filter>
+    <filter id="fogs" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.5"/></filter>
+    <marker id="ah" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10Z" fill="#fff"/></marker>
+    <marker id="ahr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="3.4" markerHeight="3.4" orient="auto"><path d="M0 0 L10 5 L0 10Z" fill="#ff5a5f"/></marker>
+    <marker id="ahb" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="3.4" markerHeight="3.4" orient="auto"><path d="M0 0 L10 5 L0 10Z" fill="#3a9ae0"/></marker>
+    <marker id="ahw" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="3" markerHeight="3" orient="auto"><path d="M0 0 L10 5 L0 10Z" fill="#2476b8"/></marker>
+    <radialGradient id="holeg"><stop offset="0" stop-color="#ffffff"/><stop offset=".7" stop-color="#e9eef3"/><stop offset="1" stop-color="#9aa6b2"/></radialGradient>
+    <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef8ff"/><stop offset="1" stop-color="#dff0fb"/></linearGradient>
+  </defs>
+</svg>
+
+<nav id="tabs">
+  <button class="tab on"><span class="n">1</span>🍽️ 접시 부채 대결<span class="star">⭐</span></button>
+  <button class="tab"><span class="n">2</span>🎈 풍선 꾹 누르기<span class="star">⭐</span></button>
+  <button class="tab"><span class="n">3</span>🍼 미니 공기대포<span class="star">⭐</span></button>
+  <button class="tab"><span class="n">4</span>📦 대형 공기대포<span class="star">⭐</span></button>
+  <button class="tab"><span class="n">5</span>🧩 바람? 공기압?<span class="star">⭐</span></button>
+</nav>
+
+<main>
+<!-- 1. 접시 부채 대결 -->
+<section class="panel on" id="p1">
+  <div class="coach"><svg viewBox="0 0 120 130"><use href="#char"/></svg><div class="bubble" id="b1">공기는 눈에 안 보이지만 우리 주위에 가득해요.<br>접시로 공기를 움직여서 컵을 <b>검은 줄 너머</b>로 보내 볼까요? <b>시작</b>을 눌러요!</div></div>
+  <div class="stage">
+    <svg id="s1" viewBox="0 0 1600 900">
+      <rect width="1600" height="900" fill="url(#wall)"/>
+      <rect x="60" y="150" width="1480" height="690" rx="34" fill="#f3dcb4" stroke="#d9b680" stroke-width="8"/>
+      <path d="M120 230 H1480 M120 420 H1480 M120 610 H1480" stroke="#e8cc9c" stroke-width="5"/>
+      <rect x="784" y="150" width="32" height="690" fill="#26282b"/>
+      <path d="M784 200 h32 M784 330 h32 M784 470 h32 M784 610 h32 M784 750 h32" stroke="#3a3d42" stroke-width="4"/>
+      <text x="420" y="205" text-anchor="middle" font-family="Jua" font-size="40" fill="#c9363c">빨강 컵은 오른쪽으로 →</text>
+      <text x="1180" y="205" text-anchor="middle" font-family="Jua" font-size="40" fill="#2476b8">← 파랑 컵은 왼쪽으로</text>
+      <g id="cups1"></g>
+      <g id="wind1"></g>
+      <g id="plate1">
+        <path d="M-14 60 L-10 150 Q0 168 14 150 L18 60Z" fill="#ffd9b8" stroke="#e8b48c" stroke-width="5"/>
+        <circle r="82" fill="#fff" stroke="#cfd6de" stroke-width="7"/>
+        <circle r="70" fill="none" stroke="#e6eaee" stroke-width="5" stroke-dasharray="7 6"/>
+        <circle r="50" fill="#fbfcfd" stroke="#e6eaee" stroke-width="4"/>
+        <ellipse cx="-4" cy="74" rx="26" ry="18" fill="#ffd9b8" stroke="#e8b48c" stroke-width="5"/>
+        <text y="12" text-anchor="middle" font-family="Jua" font-size="30" fill="#9aa8b5">접시</text>
+      </g>
+    </svg>
+    <div class="counter" style="left:2.5%">⏱ <b id="t1">30</b>초</div>
+    <div class="counter" style="right:2.5%">넘어간 컵 <b id="n1">0</b> / 6</div>
+    <div class="meter">바람 <span class="bar"><i id="mb1"></i></span><span class="word" id="mw1">조용~</span></div>
+    <div class="hint" id="h1" style="left:16%;top:62%">접시를 잡고 휙휙!</div>
+  </div>
+  <div class="row"><button class="bbtn red pulse" id="go1">▶ 시작!</button></div>
+  <div class="card" id="c1"><span class="big">빠르게 움직이는 공기일수록 더 세게 밀어요!</span>움직이는 공기를 <b>바람</b>이라고 해요. 접시를 살살 흔들면 바람이 약하고, 빠르게 흔들면 바람이 세져요.</div>
+</section>
+
+<!-- 2. 풍선 꾹 누르기 -->
+<section class="panel" id="p2">
+  <div class="coach"><svg viewBox="0 0 120 130"><use href="#char"/></svg><div class="bubble" id="b2">빵빵한 풍선이에요. 입구는 손으로 꼭 잡고 있어요.<br>장갑 손을 잡고 풍선 쪽으로 <b>꾹</b> 밀어 보세요!</div></div>
+  <div class="stage">
+    <svg id="s2" viewBox="0 0 1600 900">
+      <rect width="1600" height="900" fill="url(#wall)"/>
+      <rect y="800" width="1600" height="100" fill="#f3dcb4"/>
+      <g id="arr2"></g>
+      <g id="bal2"></g>
+      <g id="dots2"></g>
+      <g id="out2" style="display:none">
+        <path class="air" d="M720 760 q-40 50 -110 110"/><path class="air" d="M720 760 q-14 60 -40 130"/>
+        <path class="air" d="M720 760 q0 60 0 130"/><path class="air" d="M720 760 q14 60 40 130"/><path class="air" d="M720 760 q40 50 110 110"/>
+      </g>
+      <g id="mh2">
+        <rect x="-30" y="22" width="60" height="70" rx="20" fill="#fff" stroke="#c4ccd6" stroke-width="4"/>
+        <rect x="-26" y="84" width="52" height="40" rx="10" fill="#7cc4ee"/>
+        <ellipse cx="-24" cy="10" rx="15" ry="22" fill="#fff" stroke="#c4ccd6" stroke-width="4"/>
+        <ellipse cx="24" cy="10" rx="15" ry="22" fill="#fff" stroke="#c4ccd6" stroke-width="4"/>
+      </g>
+      <g id="lh2"><use href="#glove"/></g>
+      <g id="rh2"><use href="#glove"/></g>
+      <text id="shh2" x="900" y="830" font-family="Jua" font-size="100" fill="#2476b8" style="display:none">쉭~!</text>
+      <g transform="translate(1330 0)">
+        <text x="55" y="150" text-anchor="middle" font-family="Jua" font-size="44" fill="#c9363c">공기압</text>
+        <rect x="20" y="180" width="70" height="520" rx="35" fill="#fff" stroke="#c4ccd6" stroke-width="6"/>
+        <clipPath id="gclip"><rect x="26" y="186" width="58" height="508" rx="29"/></clipPath>
+        <rect id="gf2" clip-path="url(#gclip)" x="26" y="694" width="58" height="0" fill="#7cc4ee"/>
+        <path d="M90 300 h18 M90 420 h18 M90 540 h18" stroke="#c4ccd6" stroke-width="5"/>
+        <text x="122" y="225" font-family="Jua" font-size="30" fill="#c9363c">크다</text>
+        <text x="122" y="690" font-family="Jua" font-size="30" fill="#2476b8">작다</text>
+      </g>
+    </svg>
+    <div class="hint" id="h2" style="left:22%;top:38%">손을 잡고 꾹 →</div>
+  </div>
+  <div class="row"><button class="bbtn red pulse" id="rel2" hidden>🖐️ 입구 놓기</button></div>
+  <div class="card" id="c2"><span class="big">갇힌 공기를 누르면 공기압이 커져요!</span><b>공기압</b>은 공기가 물건을 누르는 힘이에요. 공기압이 커진 공기는 손을 밀어내고, 구멍이 열리면 쉭~ 빠져나가요.</div>
+</section>
+
+<!-- 3. 미니 공기대포 -->
+<section class="panel" id="p3">
+  <div class="coach"><svg viewBox="0 0 120 130"><use href="#char"/></svg><div class="bubble" id="b3">페트병 바닥을 자르고 풍선을 씌웠어요.<br>풍선 <b>매듭</b>을 잡고 뒤로 당겼다가 <b>놓아</b> 보세요! 조금? 많이?</div></div>
+  <div class="stage">
+    <svg id="s3" viewBox="0 0 1600 900">
+      <rect width="1600" height="900" fill="url(#wall)"/>
+      <rect y="640" width="1600" height="260" fill="#f3dcb4"/>
+      <path d="M0 640 H1600" stroke="#d9b680" stroke-width="8"/>
+      <rect x="470" y="540" width="60" height="100" rx="8" fill="#c9a777"/><rect x="760" y="540" width="60" height="100" rx="8" fill="#c9a777"/>
+      <path id="body3" d="M380 320 H860 C930 320 960 384 1000 395 H1070 V465 H1000 C960 476 930 540 860 540 H380Z" fill="#d7efff" fill-opacity=".55" stroke="#8cc4e6" stroke-width="7"/>
+      <path d="M430 352 H840" stroke="#fff" stroke-width="12" stroke-linecap="round" opacity=".8"/>
+      <g id="glow3" opacity="0">
+        <path d="M384 324 H860 C928 324 958 388 1000 399 H1066 V461 H1000 C958 472 928 536 860 536 H384Z" fill="#ff7a7a"/>
+        <path d="M480 400 H900 M480 460 H900 M620 430 H1040" stroke="#fff" stroke-width="12" stroke-linecap="round" marker-end="url(#ah)"/>
+        <text x="620" y="520" text-anchor="middle" font-family="Jua" font-size="40" fill="#fff">공기압 쑥!</text>
+      </g>
+      <rect x="1036" y="388" width="36" height="84" rx="8" fill="#bfe4fb" stroke="#8cc4e6" stroke-width="6"/>
+      <path id="mem3" d="M380 318 Q380 430 380 542Z" fill="#ff5a5f" stroke="#d63a40" stroke-width="5"/>
+      <rect x="368" y="304" width="34" height="252" rx="14" fill="#ff5a5f" stroke="#d63a40" stroke-width="5"/>
+      <g id="knot3">
+        <circle r="80" fill="transparent"/>
+        <path d="M0 -12 L-30 -18 Q-46 0 -30 18 L0 12Z" fill="#ff5a5f" stroke="#d63a40" stroke-width="5"/>
+        <circle r="17" fill="#e8454b" stroke="#d63a40" stroke-width="5"/>
+      </g>
+      <text id="lbl3" x="300" y="290" text-anchor="middle" font-family="Jua" font-size="40" fill="#c9363c"></text>
+      <g id="ring3" style="display:none"></g>
+      <!-- 양초 -->
+      <rect x="1360" y="628" width="120" height="18" rx="9" fill="#c4ccd6"/>
+      <rect x="1395" y="470" width="50" height="164" rx="8" fill="#fff6ec" stroke="#e7cdb0" stroke-width="5"/>
+      <path d="M1400 520 h40 M1400 570 h40" stroke="#ffd0d2" stroke-width="8"/>
+      <path d="M1420 470 V456" stroke="#33414f" stroke-width="5" stroke-linecap="round"/>
+      <g id="flame3"><g class="flicker">
+        <path d="M0 -90 C28 -52 30 -8 0 0 C-30 -8 -28 -52 0 -90Z" fill="#ffb02e"/>
+        <path d="M0 -58 C14 -36 15 -6 0 0 C-15 -6 -14 -36 0 -58Z" fill="#fff07a"/>
+      </g></g>
+      <g class="smoke" id="smoke3"><path d="M1420 450 q-14 -24 0 -48 t0 -48"/><path d="M1414 450 q14 -26 0 -52 t0 -52"/><path d="M1426 450 q-10 -22 0 -44 t0 -44"/></g>
+      <text x="725" y="610" text-anchor="middle" font-family="Jua" font-size="34" fill="#6c7a8a">바닥을 자른 페트병</text>
+      <text x="1420" y="700" text-anchor="middle" font-family="Jua" font-size="34" fill="#6c7a8a">촛불</text>
+    </svg>
+    <div class="hint" id="h3" style="left:22%;top:38%">← 매듭 당기기</div>
+  </div>
+  <div class="row"><button class="bbtn red" id="lit3" hidden>🕯️ 다시 불 켜기</button></div>
+  <div class="card" id="c3"><span class="big">풍선이 병 속 공기를 눌러 공기압이 커졌어요!</span>눌린 공기가 하나뿐인 병 입구로 빠르게 빠져나가 촛불까지 날아갔어요. 많이 당길수록 더 세게 밀어요.</div>
+</section>
+
+<!-- 4. 대형 공기대포 -->
+<section class="panel" id="p4">
+  <div class="coach"><svg viewBox="0 0 120 130"><use href="#char"/></svg><div class="bubble" id="b4">큰 상자 안에 하얀 안개가 가득해요. 앞에는 동그란 구멍이 하나!<br>상자 뒤판을 <b>천천히 꾹</b> 눌러도 보고, <b>빠르게 톡!</b> 쳐도 보세요.</div></div>
+  <div class="stage">
+    <svg id="s4" viewBox="0 0 1600 900">
+      <rect width="1600" height="900" fill="#b8d3ea"/>
+      <rect y="780" width="1600" height="120" fill="#f3dcb4"/>
+      <path d="M0 780 H1600" stroke="#d9b680" stroke-width="8"/>
+      <!-- 상자 -->
+      <path d="M150 380 L560 380 L660 300 L250 300Z" fill="#e2b679" stroke="#a87638" stroke-width="6" stroke-linejoin="round"/>
+      <path d="M355 300 L455 300 L360 380 L260 380Z" fill="#d7c4a0" opacity=".8"/>
+      <path id="side4" d="M150 380 L560 380 L560 780 L150 780 Q150 580 150 380Z" fill="#d9a35f" stroke="#a87638" stroke-width="6" stroke-linejoin="round"/>
+      <path d="M560 380 L660 300 L660 700 L560 780Z" fill="#c98f4b" stroke="#a87638" stroke-width="6" stroke-linejoin="round"/>
+      <ellipse cx="612" cy="540" rx="34" ry="80" transform="rotate(-6 612 540)" fill="url(#holeg)" stroke="#8a5d2a" stroke-width="6"/>
+      <text x="355" y="560" text-anchor="middle" font-family="Jua" font-size="40" fill="#8a5d2a">안개 가득 상자</text>
+      <text x="612" y="840" text-anchor="middle" font-family="Jua" font-size="32" fill="#8a5d2a">↑ 동그란 구멍</text>
+      <g id="ooze4" filter="url(#fog)"></g>
+      <g id="curl4" style="display:none">
+        <path id="cu4a" d="M640 470 C700 466 716 420 690 400 C664 380 636 404 652 426 C662 440 680 432 676 420" fill="none" stroke="#2476b8" stroke-width="7" stroke-linecap="round" marker-end="url(#ahw)"/>
+        <path id="cu4b" d="M640 610 C700 614 716 660 690 680 C664 700 636 676 652 654 C662 640 680 648 676 660" fill="none" stroke="#2476b8" stroke-width="7" stroke-linecap="round" marker-end="url(#ahw)"/>
+      </g>
+      <g id="ring4"><g id="fog4" filter="url(#fog)"></g><g id="sw4"></g></g>
+      <g id="cups4"></g>
+      <!-- 뒤판 누르는 손 -->
+      <g id="zone4">
+        <rect x="20" y="270" width="380" height="530" fill="transparent"/>
+        <g id="hand4"><use href="#glove"/></g>
+        <text x="60" y="350" font-family="Jua" font-size="34" fill="#c9363c">여기 뒤판!</text>
+      </g>
+    </svg>
+    <div class="cap" id="cap4" hidden>🐢 느리게 보기: 구멍 가장자리 공기가 뒤로 동글게 말려요!</div>
+    <div class="hint" id="h4" style="left:10%;top:72%">뒤판을 꾹! 또는 톡!</div>
+  </div>
+  <div class="row">
+    <button class="bbtn white" id="slow4">🐢 느리게 보기</button>
+    <button class="bbtn red" id="re4" hidden>🥤 컵 다시 쌓기</button>
+  </div>
+  <div class="card" id="c4"><span class="big">빙글빙글 도는 도넛 모양 공기, 소용돌이 고리예요!</span>안개는 공기의 모양을 보여 줄 뿐, 미는 것은 공기예요!<br>빙글빙글 도는 공기 도넛은 흩어지지 않아서 부채 바람보다 훨씬 멀리 날아가요.</div>
+</section>
+
+<!-- 5. 바람? 공기압? -->
+<section class="panel" id="p5">
+  <div class="coach"><svg viewBox="0 0 120 130"><use href="#char"/></svg><div class="bubble" id="b5">그림을 끌어서 알맞은 상자에 쏙 넣어요.<br>움직이는 공기(바람)가 밀까요? 눌린 공기가 밀어낼까요?</div></div>
+  <div class="tray" id="tray"></div>
+  <div class="qfb" id="fb5">그림을 손가락으로 끌어 보세요!</div>
+  <div class="bins">
+    <div class="bin" data-k="wind"><h3>💨 움직이는 공기가 밀어요</h3><div class="got"></div></div>
+    <div class="bin" data-k="press"><h3>🎈 눌린 공기가 밀어내요</h3><div class="got"></div></div>
+  </div>
+  <div class="row"><button class="bbtn white" id="re5" hidden>🔁 다시 하기</button></div>
+  <div class="card" id="c5"><span class="big">와, 공기의 힘 박사가 되었어요!</span>바람은 움직이는 공기가 밀고, 꽉 눌린 공기는 공기압이 커져서 밀어내요.</div>
+</section>
+</main>
+
+<footer>
+  <div class="brand">어게인 실험과학 수학학원</div>
+  <div class="tel">교육문의 010.2976.5774</div>
+</footer>
+<div class="toast" id="toast"></div>
+<canvas id="fx"></canvas>
+
+<script>
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const rand = (a, b) => a + Math.random() * (b - a);
+const ease = { in: t => t * t, out: t => 1 - (1 - t) * (1 - t), io: t => t < .5 ? 2 * t * t : 1 - 2 * (1 - t) * (1 - t) };
+const NS = 'http://www.w3.org/2000/svg';
+
+/* ---------- 소리 ---------- */
+let ac;
+const audio = () => ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+function tone(f, d = .15, type = 'sine', at = 0, v = .18, f2) {
+  try {
+    const a = audio(), t = a.currentTime + at, o = a.createOscillator(), g = a.createGain();
+    o.type = type; o.frequency.setValueAtTime(f, t); if (f2) o.frequency.exponentialRampToValueAtTime(f2, t + d);
+    g.gain.setValueAtTime(v, t); g.gain.exponentialRampToValueAtTime(.001, t + d);
+    o.connect(g).connect(a.destination); o.start(t); o.stop(t + d);
+  } catch (e) {}
+}
+function noise(d, freq, v, type = 'lowpass', at = 0) {
+  try {
+    const a = audio(), n = a.sampleRate * d, b = a.createBuffer(1, n, a.sampleRate), ch = b.getChannelData(0);
+    for (let i = 0; i < n; i++) ch[i] = (Math.random() * 2 - 1) * Math.sin(Math.PI * i / n);
+    const s = a.createBufferSource(), f = a.createBiquadFilter(), g = a.createGain();
+    f.type = type; f.frequency.value = freq; g.gain.value = v;
+    s.buffer = b; s.connect(f).connect(g).connect(a.destination); s.start(a.currentTime + at);
+  } catch (e) {}
+}
+const sfx = {
+  pop: () => { tone(520, .09, 'triangle'); tone(780, .1, 'triangle', .06); },
+  good: () => [523, 659, 784, 1047].forEach((f, i) => tone(f, .25, 'triangle', i * .09)),
+  win: () => [523, 659, 784, 1047, 784, 1047, 1319].forEach((f, i) => tone(f, .3, 'triangle', i * .1)),
+  bad: () => { tone(300, .18, 'triangle', 0, .12); tone(220, .28, 'triangle', .15, .12); },
+  whoosh: () => noise(.5, 700, .5),
+  tick: () => tone(1200, .05, 'square', 0, .04),
+  boing: () => tone(260, .35, 'sine', 0, .2, 620),
+  snap: () => { tone(700, .1, 'square', 0, .06, 250); noise(.08, 2500, .3, 'highpass'); },
+  shh: () => { noise(1.4, 2600, .45, 'highpass'); tone(500, 1.2, 'sine', 0, .05, 180); },
+  ring: () => { tone(150, .4, 'sine', 0, .3, 70); noise(.35, 450, .45); },
+  flick: () => { tone(620, .12, 'triangle', 0, .08, 900); tone(900, .12, 'triangle', .1, .08, 620); },
+  clatter: () => { for (let i = 0; i < 6; i++) { tone(rand(240, 480), .07, 'square', i * .08, .05); noise(.06, 1800, .25, 'bandpass', i * .08); } }
+};
+
+/* ---------- 반짝이 · 꽃가루 ---------- */
+const cv = $('#fx'), cx = cv.getContext('2d');
+let parts = [], running = false;
+const COLORS = ['#ff5a5f', '#3a9ae0', '#ffd666', '#7fd6b0', '#ffffff', '#ff9d5c'];
+function resizeFx() { cv.width = innerWidth * devicePixelRatio; cv.height = innerHeight * devicePixelRatio; }
+addEventListener('resize', resizeFx); resizeFx();
+function sparkle(x, y, n = 22) {
+  for (let i = 0; i < n; i++) {
+    const a = Math.random() * 6.28, sp = rand(3, 8);
+    parts.push({ x, y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - 2, r: 0, vr: .2, s: rand(7, 12), c: COLORS[i % 4], life: 50, star: true });
+  }
+  kick();
+}
+function confetti() {
+  for (let i = 0; i < 140; i++) parts.push({ x: rand(0, innerWidth), y: rand(-200, -10), vx: rand(-1.5, 1.5), vy: rand(1, 4), r: rand(0, 6), vr: rand(-.2, .2), s: rand(6, 11), c: COLORS[i % 6], life: 200, star: false });
+  kick();
+}
+function kick() { if (!running) { running = true; requestAnimationFrame(fxLoop); } }
+function fxLoop() {
+  const k = devicePixelRatio; cx.clearRect(0, 0, cv.width, cv.height);
+  parts = parts.filter(p => p.life-- > 0 && p.y < innerHeight + 40);
+  for (const p of parts) {
+    p.vy += p.star ? .14 : .03; p.x += p.vx; p.y += p.vy; p.r += p.vr;
+    cx.save(); cx.translate(p.x * k, p.y * k); cx.rotate(p.r); cx.globalAlpha = Math.min(1, p.life / 20); cx.fillStyle = p.c;
+    if (p.star) { cx.beginPath(); for (let i = 0; i < 10; i++) { const rr = (i % 2 ? p.s / 2.4 : p.s) * k, a = i * Math.PI / 5; cx.lineTo(Math.cos(a) * rr, Math.sin(a) * rr); } cx.fill(); }
+    else { cx.strokeStyle = '#d3e7f5'; cx.lineWidth = k; cx.fillRect(-p.s * k / 2, -p.s * k / 4, p.s * k, p.s * k / 2); cx.strokeRect(-p.s * k / 2, -p.s * k / 4, p.s * k, p.s * k / 2); }
+    cx.restore();
+  }
+  if (parts.length) requestAnimationFrame(fxLoop); else { running = false; cx.clearRect(0, 0, cv.width, cv.height); }
+}
+// 보상: 하얀 안개 도넛이 화면을 가로질러 빙글빙글 날아감
+const DONUT = `<svg viewBox="0 0 130 150"><g filter="url(#fogs)"><ellipse cx="65" cy="75" rx="26" ry="56" fill="none" stroke="#fff" stroke-width="22"/></g>
+  <ellipse cx="65" cy="75" rx="26" ry="56" fill="none" stroke="#7cc4ee" stroke-width="3" stroke-dasharray="10 8"/>
+  <g class="spin"><circle cx="65" cy="19" r="13" fill="none" stroke="#2476b8" stroke-width="4" stroke-dasharray="50 32"/></g>
+  <g class="spin r"><circle cx="65" cy="131" r="13" fill="none" stroke="#2476b8" stroke-width="4" stroke-dasharray="50 32"/></g></svg>`;
+function celebrate() {
+  sfx.win(); confetti();
+  for (let i = 0; i < 6; i++) {
+    const b = document.createElement('div'); b.className = 'fly';
+    b.style.top = rand(12, 70) + 'vh';
+    b.style.setProperty('--dy', rand(-80, 80) + 'px');
+    b.style.animationDuration = rand(3, 4.6) + 's'; b.style.animationDelay = rand(0, 1.4) + 's';
+    b.innerHTML = DONUT;
+    b.addEventListener('animationend', e => e.target === b && b.remove()); document.body.appendChild(b);
+  }
+}
+
+/* ---------- 공통 ---------- */
+function coach(id, html) { const el = $(id); el.classList.remove('new'); void el.offsetWidth; el.classList.add('new'); el.innerHTML = html; }
+function toast(t) { const el = $('#toast'); el.textContent = t; el.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove('on'), 2000); }
+function showCard(id) { const c = $(id); c.classList.remove('on'); void c.offsetWidth; c.classList.add('on'); setTimeout(() => c.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 300); }
+const tabs = $$('.tab'), panels = $$('.panel');
+function finish(i, card) { showCard(card); if (!tabs[i].classList.contains('done')) { tabs[i].classList.add('done'); celebrate(); } else sfx.good(); }
+tabs.forEach((t, i) => t.onclick = () => {
+  tabs.forEach(x => x.classList.toggle('on', x === t));
+  panels.forEach((p, j) => p.classList.toggle('on', j === i));
+  sfx.pop();
+});
+$('#share').onclick = async () => {
+  const url = location.href;
+  if (navigator.share) { try { await navigator.share({ title: '공기의 힘 탐험!', text: '어게인 실험과학 수학학원 · 공기의 힘 탐험 놀이', url }); return; } catch (e) { if (e.name === 'AbortError') return; } }
+  try { await navigator.clipboard.writeText(url); }
+  catch (e) { const ta = document.createElement('textarea'); ta.value = url; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); }
+  toast('주소가 복사됐어요');
+};
+function tween(dur, step, done) {
+  const t0 = performance.now();
+  const f = now => { const t = Math.min(1, (now - t0) / dur); step(t, now); if (t < 1) requestAnimationFrame(f); else done && done(); };
+  requestAnimationFrame(f);
+}
+function svgPt(svg, e) { const p = svg.createSVGPoint(); p.x = e.clientX; p.y = e.clientY; return p.matrixTransform(svg.getScreenCTM().inverse()); }
+function client(svg, x, y) { const p = svg.createSVGPoint(); p.x = x; p.y = y; const q = p.matrixTransform(svg.getScreenCTM()); return [q.x, q.y]; }
+// 보이는 탭의 장면만 움직임
+const loops = [];
+const loop = (i, fn) => loops.push([i, fn]);
+let lastT = performance.now();
+requestAnimationFrame(function frame(now) {
+  const dt = Math.min(40, now - lastT); lastT = now;
+  for (const [i, fn] of loops) if (panels[i].classList.contains('on')) fn(dt, now);
+  requestAnimationFrame(frame);
+});
+
+/* =========== 1. 접시 부채 대결 =========== */
+(() => {
+  const svg = $('#s1'), cg = $('#cups1'), wg = $('#wind1'), plate = $('#plate1'), hint = $('#h1'), btn = $('#go1');
+  const HOME = [[560, 330, 'r'], [470, 530, 'r'], [590, 730, 'r'], [1040, 330, 'b'], [1130, 530, 'b'], [1010, 730, 'b']];
+  let cups, px = 230, py = 640, lx = 0, ly = 0, lt = 0, spd = 0, down = false, dir = [1, 0];
+  let playing = false, t0 = 0, lastSec = 30, spawnT = 0, streaks = [], slowMs = 0, saidSlow = false, saidFast = false, count = 0;
+  const reset = () => { cups = HOME.map(([x, y, c]) => ({ x, y, vx: 0, vy: 0, c, home: x < 800, wob: 0, ph: rand(0, 6), over: false })); count = 0; $('#n1').textContent = 0; };
+  reset();
+
+  svg.addEventListener('pointerdown', e => {
+    e.preventDefault(); audio(); svg.setPointerCapture(e.pointerId); down = true;
+    const p = svgPt(svg, e); px = lx = clamp(p.x, 60, 1540); py = ly = clamp(p.y, 120, 860); lt = e.timeStamp; hint.hidden = true;
+  });
+  svg.addEventListener('pointermove', e => {
+    if (!down) return;
+    const p = svgPt(svg, e), dt = Math.max(6, e.timeStamp - lt);
+    spd = spd * .5 + Math.hypot(p.x - lx, p.y - ly) / dt * .5;
+    lx = p.x; ly = p.y; lt = e.timeStamp; px = clamp(p.x, 60, 1540); py = clamp(p.y, 120, 860);
+  });
+  const up = () => down = false;
+  svg.addEventListener('pointerup', up); svg.addEventListener('pointercancel', up);
+
+  btn.onclick = () => {
+    reset(); playing = true; t0 = performance.now(); lastSec = 30; $('#t1').textContent = 30;
+    btn.disabled = true; btn.classList.remove('pulse'); sfx.pop();
+    coach('#b1', '시작! 30초 동안 컵 옆에서 접시를 흔들어요.<br>컵을 <b>검은 줄 너머</b>로 보내 보세요!');
+  };
+  function end() {
+    playing = false; btn.disabled = false; btn.textContent = '🔁 다시 대결';
+    if (count) { coach('#b1', `삐익! 컵 <b>${count}개</b>를 줄 너머로 보냈어요!<br>접시를 빠르게 흔들수록 바람이 세져서 컵이 잘 밀려요.`); finish(0, '#c1'); }
+    else { sfx.bad(); coach('#b1', '아쉬워요! 이번엔 컵 바로 옆에서 접시를 <b>빠르게 휙휙</b> 흔들어 볼까요?'); }
+  }
+
+  loop(0, (dt, now) => {
+    const k = dt / 16.7;
+    spd *= Math.pow(.88, k);
+    const s = clamp((spd - .9) / 2.2, 0, 1);
+    let near = null, nd = 1e9;
+    cups.forEach(c => { const d = Math.hypot(c.x - px, c.y - 55 - py); if (d < nd) { nd = d; near = c; } });
+    if (near && nd < 420) dir = [(near.x - px) / (nd || 1), (near.y - 55 - py) / (nd || 1)];
+    else dir = [px < 800 ? 1 : -1, 0];
+    if (spd > .12) {
+      cups.forEach(c => {
+        const dx = c.x - px, dy = c.y - 55 - py, d = Math.hypot(dx, dy) || 1;
+        if (d > 330) return;
+        const f = 1 - d / 330;
+        c.wob = Math.max(c.wob, Math.min(9, spd * 6) * f);
+        if (s) { const a = .09 * s * s * f * k; c.vx += dx / d * a; c.vy += dy / d * a; }
+      });
+      if (now - spawnT > 55) {
+        spawnT = now;
+        const w = 3 + 15 * clamp(spd / 3, 0, 1), n = [-dir[1], dir[0]];
+        for (let i = 0; i < 2; i++) { const o = rand(-60, 60); streaks.push({ x: px + dir[0] * 85 + n[0] * o, y: py + dir[1] * 85 + n[1] * o, dx: dir[0], dy: dir[1], v: .35 + spd * .35, life: 1, w, L: 50 + 40 * clamp(spd / 3, 0, 1) }); }
+      }
+      if (nd < 330) {
+        if (!s) slowMs += dt;
+        if (slowMs > 1200 && !saidSlow) { saidSlow = true; coach('#b1', '살랑살랑~ 천천히 흔들면 바람이 약해요.<br>컵이 <b>살짝만</b> 흔들려요. 더 빠르게 흔들어 볼까요?'); }
+        if (s > .4 && !saidFast) { saidFast = true; coach('#b1', '휘잉! 빠르게 흔드니까 바람이 <b>세졌어요</b>.<br>컵이 쭉쭉 밀려가요!'); }
+      }
+    }
+    cups.forEach(c => {
+      c.x += c.vx * dt; c.y += c.vy * dt;
+      const fr = Math.pow(.9, k); c.vx *= fr; c.vy *= fr;
+      if (c.x < 110 || c.x > 1490) { c.x = clamp(c.x, 110, 1490); c.vx *= -.3; }
+      if (c.y < 290 || c.y > 790) { c.y = clamp(c.y, 290, 790); c.vy *= -.3; }
+      c.wob *= Math.pow(.93, k);
+    });
+    for (let i = 0; i < 6; i++) for (let j = i + 1; j < 6; j++) {
+      const a = cups[i], b = cups[j], dx = b.x - a.x, dy = (b.y - a.y) * 1.6, d = Math.hypot(dx, dy) || 1;
+      if (d < 84) { const m = (84 - d) / 2 / d; a.x -= dx * m; b.x += dx * m; a.y -= dy * m / 1.6; b.y += dy * m / 1.6; }
+    }
+    let n = 0;
+    cups.forEach(c => {
+      const o = c.home ? c.x > 845 : c.x < 755;
+      if (o && !c.over) { c.wob = 14; if (playing) { sfx.good(); const [sx, sy] = client(svg, c.x, c.y - 60); sparkle(sx, sy, 14); } }
+      c.over = o; n += o;
+    });
+    if (n !== count) { count = n; $('#n1').textContent = n; }
+    if (playing) {
+      const left = Math.max(0, 30 - Math.floor((now - t0) / 1000));
+      if (left !== lastSec) { lastSec = left; $('#t1').textContent = left; if (left && left <= 5) sfx.tick(); }
+      if (!left || count === 6) end();
+    }
+    streaks.forEach(st => { st.x += st.dx * st.v * dt; st.y += st.dy * st.v * dt; st.life -= dt / 520; });
+    streaks = streaks.filter(st => st.life > 0);
+    wg.innerHTML = streaks.map(st => `<path class="wl" d="M${st.x.toFixed(0)} ${st.y.toFixed(0)} q${(-st.dx * st.L / 2 - st.dy * 10).toFixed(0)} ${(-st.dy * st.L / 2 + st.dx * 10).toFixed(0)} ${(-st.dx * st.L).toFixed(0)} ${(-st.dy * st.L).toFixed(0)}" stroke="#5fb6ec" stroke-width="${st.w.toFixed(1)}" opacity="${st.life.toFixed(2)}"/>`).join('');
+    $('#mb1').style.width = clamp(spd / 3, 0, 1) * 100 + '%';
+    $('#mw1').textContent = spd < .12 ? '조용~' : !s ? '살랑~' : s < .55 ? '쌩쌩!' : '휘잉!!';
+    cg.innerHTML = cups.slice().sort((a, b) => a.y - b.y).map(c => {
+      const r = c.wob * Math.sin(now / 45 + c.ph), col = c.c === 'r' ? ['#ff5a5f', '#c9363c'] : ['#4aa8ef', '#2476b8'];
+      return `<g transform="translate(${c.x.toFixed(1)} ${c.y.toFixed(1)})"><ellipse rx="44" ry="11" fill="#000" opacity=".13"/><g transform="rotate(${r.toFixed(1)})">
+        <path d="M-42 -112 L42 -112 L31 0 L-31 0Z" fill="${col[0]}" stroke="${col[1]}" stroke-width="5" stroke-linejoin="round"/>
+        <path d="M-38 -86 L38 -86 L36 -70 L-36 -70Z" fill="#fff" opacity=".55"/>
+        <ellipse cy="-112" rx="42" ry="11" fill="#fff" stroke="${col[1]}" stroke-width="5"/></g></g>`;
+    }).join('');
+    plate.setAttribute('transform', `translate(${px.toFixed(1)} ${py.toFixed(1)}) rotate(${(Math.sin(now / 50) * Math.min(spd, 3) * 7).toFixed(1)})`);
+  });
+})();
+
+/* =========== 2. 풍선 꾹 누르기 =========== */
+(() => {
+  const svg = $('#s2'), bal = $('#bal2'), lh = $('#lh2'), rh = $('#rh2'), arr = $('#arr2'), dots = $('#dots2'), gf = $('#gf2'), mh = $('#mh2'), out = $('#out2'), shh = $('#shh2'), btn = $('#rel2'), hint = $('#h2');
+  const CX = 720, BASE = 700;
+  let h = 0, size = 1, mode = 'full', down = false, side = 1, sx = 0, g = 0, wob = 0, said = false, ready = false;
+  const D = Array.from({ length: 26 }, () => { const a = rand(0, 6.28), r = Math.sqrt(Math.random()) * .8; return { x: Math.cos(a) * r, y: Math.sin(a) * r, p: rand(0, 6.28) }; });
+  const sOf = h => clamp((h - 50) / 180, 0, 1);
+  mh.setAttribute('transform', `translate(${CX} ${BASE + 18})`);
+
+  svg.addEventListener('pointerdown', e => {
+    if (mode !== 'full') return;
+    e.preventDefault(); audio(); svg.setPointerCapture(e.pointerId); down = true;
+    const p = svgPt(svg, e); side = p.x < CX ? 1 : -1; sx = p.x - side * Math.max(h, 0); hint.hidden = true;
+  });
+  svg.addEventListener('pointermove', e => {
+    if (!down || mode !== 'full') return;
+    const p = svgPt(svg, e); h = clamp((p.x - sx) * side, 0, 230);
+    const s = sOf(h);
+    if (s > .15 && !said) { said = true; coach('#b2', '꾹! 풍선이 장갑 손을 <b>밀어내고</b> 있어요.<br>더 세게 눌러 볼까요? 오른쪽 <b>공기압</b> 막대를 보세요!'); }
+    if (s > .75 && !ready) {
+      ready = true; sfx.good(); btn.hidden = false;
+      coach('#b2', '와, 공기압이 쑥 커졌어요! 갇힌 공기를 누를수록 손을 더 세게 밀어내요.<br>이제 <b>입구 놓기</b>를 눌러 볼까요?');
+    }
+  });
+  const up = () => {
+    if (!down) return; down = false;
+    if (mode !== 'full') return;
+    const h0 = h; if (h0 > 60) sfx.boing();
+    tween(550, t => { if (mode === 'full' && !down) h = h0 * (1 - t) * Math.cos(t * 7.5); });
+  };
+  svg.addEventListener('pointerup', up); svg.addEventListener('pointercancel', up);
+
+  btn.onclick = () => {
+    if (mode === 'full') {
+      mode = 'squeeze'; down = false; btn.disabled = true; btn.classList.remove('pulse');
+      const h0 = Math.max(h, 0);
+      tween(380, t => h = h0 + (200 - h0) * ease.out(t), () => {
+        mode = 'out'; sfx.shh(); out.style.display = ''; shh.style.display = '';
+        tween(220, t => mh.setAttribute('transform', `translate(${CX + 90 * t} ${BASE + 18 + 40 * t}) rotate(${30 * t})`));
+        tween(1500, t => { size = 1 - .62 * ease.out(t); h = 200 * (1 - t); wob = 7 * (1 - t); }, () => {
+          mode = 'empty'; wob = 0; h = 0; out.style.display = 'none'; shh.style.display = 'none';
+          coach('#b2', '쉭~! 꽉 눌린 공기가 입구로 한꺼번에 빠져나갔어요.<br>공기압이 커진 공기는 구멍으로 <b>빠르게</b> 나가요!');
+          finish(1, '#c2'); btn.disabled = false; btn.textContent = '🎈 다시 불기';
+        });
+      });
+    } else if (mode === 'empty') {
+      mode = 'fill'; btn.disabled = true; sfx.whoosh();
+      mh.setAttribute('transform', `translate(${CX} ${BASE + 18})`);
+      tween(900, t => size = .38 + .62 * ease.out(t), () => {
+        mode = 'full'; btn.disabled = false; btn.textContent = '🖐️ 입구 놓기'; sfx.pop();
+        coach('#b2', '다시 빵빵해졌어요! 또 꾹 눌러 보고 <b>입구 놓기</b>를 해 봐요.');
+      });
+    }
+  };
+
+  loop(1, (dt, now) => {
+    const s = sOf(h), rx = 220 * size * (1 - .3 * s), ry = 245 * size * (1 + .12 * s), cy = BASE - ry;
+    g += ((mode === 'empty' || mode === 'fill' ? 0 : s) - g) * .15;
+    const r = (wob * Math.sin(now / 40)).toFixed(1);
+    bal.innerHTML = `<g transform="rotate(${r} ${CX} ${BASE})">
+      <path d="M${CX - 16} ${BASE - 8} L${CX + 16} ${BASE - 8} L${CX + 11} ${BASE + 26} L${CX - 11} ${BASE + 26}Z" fill="#e8454b" stroke="#d63a40" stroke-width="5"/>
+      <ellipse cx="${CX}" cy="${cy}" rx="${rx}" ry="${ry}" fill="#ff5a5f" stroke="#d63a40" stroke-width="6"/>
+      <ellipse cx="${CX - rx * .45}" cy="${cy - ry * .5}" rx="${rx * .13}" ry="${ry * .22}" fill="#fff" opacity=".45" transform="rotate(-25 ${CX - rx * .45} ${cy - ry * .5})"/></g>`;
+    const sp = .003 + .012 * s;
+    dots.innerHTML = mode === 'full' || mode === 'squeeze' ? D.map(d => `<circle cx="${(CX + d.x * rx * .9 + Math.sin(now * sp + d.p) * 8).toFixed(1)}" cy="${(cy + d.y * ry * .85 + Math.cos(now * sp * 1.3 + d.p) * 8).toFixed(1)}" r="7" fill="#fff" opacity=".75"/>`).join('') : '';
+    const gap = Math.max(0, 50 - h), jit = s ? Math.abs(Math.sin(now / 35)) * s * 7 : 0;
+    lh.setAttribute('transform', `translate(${(CX - rx - gap - 6 - jit).toFixed(1)} ${cy.toFixed(1)})`);
+    rh.setAttribute('transform', `translate(${(CX + rx + gap + 6 + jit).toFixed(1)} ${cy.toFixed(1)}) scale(-1 1)`);
+    let a = '';
+    if (g > .05) {
+      const L = 30 + 90 * g, w = 6 + 10 * g, op = Math.min(1, g * 2).toFixed(2);
+      [-150, -120, -90, -60, -30, 30, 150].forEach(deg => {
+        const t = deg * Math.PI / 180, x0 = CX + Math.cos(t) * rx, y0 = cy + Math.sin(t) * ry;
+        a += `<path d="M${x0} ${y0} l${Math.cos(t) * L * .6} ${Math.sin(t) * L * .6}" stroke="#ff8a7a" stroke-width="${w * .7}" stroke-linecap="round" marker-end="url(#ahr)" opacity="${op}"/>`;
+      });
+      a += `<path d="M${CX - rx - 20} ${cy - 110} h${-L}" stroke="#ff5a5f" stroke-width="${w}" stroke-linecap="round" marker-end="url(#ahr)" opacity="${op}"/>
+        <path d="M${CX + rx + 20} ${cy - 110} h${L}" stroke="#ff5a5f" stroke-width="${w}" stroke-linecap="round" marker-end="url(#ahr)" opacity="${op}"/>`;
+      if (g > .3) a += `<text x="${CX - rx - 110}" y="${cy + 105}" text-anchor="middle" font-family="Jua" font-size="34" fill="#c9363c" opacity="${op}">밀어내요!</text><text x="${CX + rx + 110}" y="${cy + 105}" text-anchor="middle" font-family="Jua" font-size="34" fill="#c9363c" opacity="${op}">밀어내요!</text>`;
+    }
+    arr.innerHTML = a;
+    const hh = 508 * g;
+    gf.setAttribute('y', (694 - hh).toFixed(1)); gf.setAttribute('height', hh.toFixed(1));
+    gf.setAttribute('fill', `hsl(${(205 - 205 * g).toFixed(0)} 85% 62%)`);
+  });
+})();
+
+/* =========== 3. 미니 공기대포 =========== */
+(() => {
+  const svg = $('#s3'), mem = $('#mem3'), knot = $('#knot3'), glow = $('#glow3'), ring = $('#ring3'), flame = $('#flame3'), smoke = $('#smoke3'), lbl = $('#lbl3'), lit3 = $('#lit3'), hint = $('#h3');
+  const RIM = 380, MAXB = 220, MOUTH = 1072, CAND = 1420, FY = 430;
+  let b = 0, down = false, off = 0, busy = false, lit = true, bend = 0, fs = 1, wobA = 0, wobT = 0, lvl = 0;
+  const drawMem = () => { mem.setAttribute('d', `M${RIM} 318 Q${RIM - 2 * b} 430 ${RIM} 542Z`); knot.setAttribute('transform', `translate(${RIM - b} 430)`); };
+  drawMem();
+
+  svg.addEventListener('pointerdown', e => {
+    if (busy) return;
+    const p = svgPt(svg, e); if (p.x > 600) return;
+    e.preventDefault(); audio(); svg.setPointerCapture(e.pointerId); down = true; off = (RIM - b) - p.x; hint.hidden = true;
+  });
+  svg.addEventListener('pointermove', e => {
+    if (!down) return;
+    const p = svgPt(svg, e); b = clamp(RIM - (p.x + off), 0, MAXB); drawMem();
+    const L = b < 25 ? 0 : b < MAXB * .5 ? 1 : 2;
+    if (L !== lvl) { lvl = L; if (L) tone(L === 1 ? 500 : 750, .08, 'triangle', 0, .08); }
+    lbl.setAttribute('x', RIM - b); lbl.textContent = ['', '조금 당겼어요', '많이 당겼어요!'][L];
+  });
+  const up = () => {
+    if (!down) return; down = false; lbl.textContent = ''; lvl = 0;
+    if (b < 25) { const b0 = b; tween(150, t => { b = b0 * (1 - t); drawMem(); }); coach('#b3', '조금 더 뒤로 <b>쭉</b> 당겼다가 놓아 보세요!'); return; }
+    fire(b / MAXB);
+  };
+  svg.addEventListener('pointerup', up); svg.addEventListener('pointercancel', up);
+
+  function drawRing(x, ry, ang, op) {
+    const rx = ry * .38, st = `fill="none" stroke="#3a9ae0" stroke-width="4" opacity="${op}"`;
+    ring.innerHTML = `<ellipse cx="${x}" cy="${FY}" rx="${rx}" ry="${ry}" ${st} stroke-dasharray="9 8"/>
+      <g transform="translate(${x} ${FY - ry}) rotate(${-ang})"><circle r="14" ${st} stroke-dasharray="58 30" marker-end="url(#ahb)"/></g>
+      <g transform="translate(${x} ${FY + ry}) rotate(${ang})"><circle r="14" ${st} stroke-dasharray="58 30" marker-end="url(#ahb)"/></g>
+      <text x="${x}" y="${FY - ry - 30}" text-anchor="middle" font-family="Jua" font-size="30" fill="#2476b8" opacity="${op}">공기 도넛</text>`;
+  }
+  function fire(p) {
+    busy = true; const b0 = b; sfx.snap();
+    tween(90, t => { b = b0 - (b0 + 45) * ease.in(t); drawMem(); }, () => {
+      sfx.ring();
+      tween(800, t => glow.setAttribute('opacity', (Math.max(.3, p) * .85 * (1 - t)).toFixed(2)));
+      tween(450, t => { b = -45 * (1 - t) * Math.cos(t * 9); drawMem(); }, () => { b = 0; drawMem(); });
+      const dur = 1300 - 650 * p; ring.style.display = '';
+      tween(dur, (t, now) => drawRing(MOUTH + 20 + (CAND - 50 - MOUTH) * t, 40 + 22 * t, now * .5, .75), () => { ring.style.display = 'none'; hit(p); busy = false; });
+    });
+  }
+  function hit(p) {
+    if (!lit) { coach('#b3', '촛불이 꺼져 있어요. <b>다시 불 켜기</b>를 눌러요.'); return; }
+    if (p < .5) {
+      wobA = 20 + 20 * p; wobT = performance.now(); sfx.flick();
+      coach('#b3', '살랑~ 촛불이 살짝 <b>흔들렸어요</b>!<br>이번엔 매듭을 <b>많이</b> 당겼다가 놓아 볼까요?');
+    } else {
+      sfx.whoosh();
+      tween(260, t => bend = 72 * ease.out(t), () => tween(240, t => fs = 1 - t, () => {
+        lit = false; bend = 0; smoke.classList.remove('on'); void smoke.getBBox(); smoke.classList.add('on'); lit3.hidden = false;
+        coach('#b3', '휙! 공기 도넛이 촛불을 <b>세게 밀어서</b> 불이 꺼졌어요!<br>눈에 안 보여도 공기는 이렇게 힘이 세요.');
+        finish(2, '#c3');
+      }));
+    }
+  }
+  lit3.onclick = () => { lit = true; lit3.hidden = true; smoke.classList.remove('on'); sfx.pop(); tween(400, t => fs = ease.out(t)); };
+
+  loop(2, (dt, now) => {
+    const w = now - wobT, wob = wobA * Math.sin(w / 45) * Math.exp(-w / 650);
+    flame.setAttribute('transform', `translate(${CAND} 458) skewX(${(-(bend + wob)).toFixed(1)}) scale(${Math.max(fs, .001).toFixed(3)})`);
+  });
+})();
+
+/* =========== 4. 대형 공기대포 =========== */
+(() => {
+  const svg = $('#s4'), side = $('#side4'), hand = $('#hand4'), ooze = $('#ooze4'), fogG = $('#fog4'), sw = $('#sw4'), curl = $('#curl4'), cupsG = $('#cups4');
+  const zone = $('#zone4'), slowBtn = $('#slow4'), re = $('#re4'), cap = $('#cap4'), hint = $('#h4');
+  const HX = 612, HY = 540, NU = 18, NV = 4, TUBE = 24;
+  let knocked = false, slow = false, dent = 0, pressing = false, pressT = 0, puffs = [], ring = null, cups = [], spawnT = 0, snap = -1, saidSlow = false, settledShot = false;
+  const fog = [];
+  for (let i = 0; i < NU * NV; i++) { const c = document.createElementNS(NS, 'circle'); c.setAttribute('fill', '#fff'); c.setAttribute('opacity', 0); fogG.appendChild(c); fog.push(c); }
+  const STACK = [[1300, 780], [1380, 780], [1460, 780], [1340, 692], [1420, 692], [1380, 604]];
+  const resetCups = () => { knocked = false; cups = STACK.map(([x, y]) => ({ x, y, vx: 0, vy: 0, a: 0, va: 0, moving: false })); };
+  resetCups();
+  const curlLen = [$('#cu4a'), $('#cu4b')].map(p => { const L = p.getTotalLength(); p.style.strokeDasharray = L; return [p, L]; });
+
+  zone.addEventListener('pointerdown', e => { e.preventDefault(); audio(); zone.setPointerCapture(e.pointerId); pressing = true; pressT = performance.now(); hint.hidden = true; });
+  zone.addEventListener('pointerup', () => {
+    if (!pressing) return; pressing = false;
+    if (performance.now() - pressT < 230) shoot();
+    else if (!saidSlow) { saidSlow = true; coach('#b4', '스르르~ 안개가 조금 나오다가 금방 <b>사라졌어요</b>.<br>이번엔 뒤판을 <b>빠르게 톡!</b> 쳐 볼까요?'); }
+  });
+  zone.addEventListener('pointercancel', () => pressing = false);
+  slowBtn.onclick = () => { slow = !slow; slowBtn.classList.toggle('on', slow); slowBtn.textContent = slow ? '🐢 느리게 보기: 켜짐' : '🐢 느리게 보기'; cap.hidden = !slow; sfx.pop(); };
+  re.onclick = () => { resetCups(); re.hidden = true; sfx.pop(); coach('#b4', '컵 탑을 다시 쌓았어요! 또 <b>톡!</b> 쳐 볼까요? 🐢 느리게 보기도 눌러 봐요.'); };
+
+  function shoot() {
+    if (ring) return;
+    ring = { x: HX + 8, t: 0, ph: 0, hit: false }; snap = 0; settledShot = false; sfx.ring();
+    coach('#b4', '톡! 하얀 <b>안개 도넛</b>이 빙글빙글 돌면서 날아가요!');
+  }
+
+  loop(3, (dt, now) => {
+    const sd = dt / (slow ? 5 : 1), k = dt / 16.7;
+    // 뒤판 누르기
+    if (snap >= 0) { snap += sd; dent = snap < 220 ? 55 * Math.sin(Math.PI * snap / 220) : 0; if (snap >= 220) snap = -1; }
+    else if (pressing && now - pressT > 230) {
+      dent += (36 - dent) * .03 * k;
+      if (now - spawnT > 170) { spawnT = now; puffs.push({ x: HX + 10, y: HY + rand(-40, 40), r: 12, vx: rand(.03, .06), vy: rand(-.012, .012), life: 1 }); }
+    } else dent += (0 - dent) * .15 * k;
+    side.setAttribute('d', `M150 380 L560 380 L560 780 L150 780 Q${(150 + dent * 2).toFixed(1)} 580 150 380Z`);
+    hand.setAttribute('transform', `translate(${(140 + dent * 1.3).toFixed(1)} 580)`);
+    puffs.forEach(p => { p.x += p.vx * dt; p.y += p.vy * dt; p.r += .014 * dt; p.life -= dt / 1500; });
+    puffs = puffs.filter(p => p.life > 0);
+    ooze.innerHTML = puffs.map(p => `<circle cx="${p.x.toFixed(0)}" cy="${p.y.toFixed(0)}" r="${p.r.toFixed(1)}" fill="#fff" opacity="${(p.life * .85).toFixed(2)}"/>`).join('');
+
+    // 안개 도넛
+    if (ring) {
+      ring.t += sd; ring.ph -= sd * .011;
+      ring.x += (ring.hit ? .22 : .5) * sd;
+      const R = 42 + 34 * Math.min(1, ring.t / 320), op = clamp(1 - (ring.x - 1330) / 260, 0, 1);
+      for (let i = 0; i < fog.length; i++) {
+        const u = (i % NU) / NU * 6.283, vi = Math.floor(i / NU), v = vi / NV * 6.283 + ring.ph;
+        const X = TUBE * Math.sin(v), rr = R + TUBE * Math.cos(v), Y = rr * Math.cos(u), Z = rr * Math.sin(u);
+        const c = fog[i];
+        c.setAttribute('cx', (ring.x + X + Z * .3).toFixed(1)); c.setAttribute('cy', (HY - Y).toFixed(1));
+        c.setAttribute('r', vi ? 12 : 18); c.setAttribute('opacity', ((vi ? .55 : 1) * op).toFixed(2));
+      }
+      const deg = (-ring.ph * 57.3).toFixed(1), x = ring.x.toFixed(1), o = op.toFixed(2);
+      const arc = `r="${TUBE}" fill="none" stroke="#2476b8" stroke-width="5" stroke-dasharray="100 51" marker-end="url(#ahw)" opacity="${o}"`;
+      sw.innerHTML = `<g transform="translate(${x} ${(HY - R).toFixed(1)}) rotate(${-deg})"><circle ${arc}/></g><g transform="translate(${x} ${(HY + R).toFixed(1)}) rotate(${deg})"><circle ${arc}/></g>`;
+      // 느리게 보기: 구멍 가장자리에서 공기가 뒤로 말리는 모습
+      if (slow && ring.t < 1100) { curl.style.display = ''; const q = Math.min(1, ring.t / 700); curlLen.forEach(([p, L]) => p.style.strokeDashoffset = L * (1 - q)); }
+      else curl.style.display = 'none';
+      if (!ring.hit && ring.x + R * .3 + TUBE >= 1255) {
+        ring.hit = true; knocked = true; sfx.clatter();
+        cups.forEach(c => { c.moving = true; const top = c.y < 700; c.vx = rand(.25, .55) * (top ? 1.3 : .8); c.vy = top ? -rand(.25, .5) : -rand(.05, .15); c.va = rand(.25, .6) * (Math.random() < .8 ? 1 : -1); });
+        const [sx, sy] = client(svg, 1380, 640); sparkle(sx, sy, 26);
+      }
+      if (op <= 0) { ring = null; fog.forEach(c => c.setAttribute('opacity', 0)); sw.innerHTML = ''; curl.style.display = 'none'; }
+    }
+
+    // 컵 탑
+    let moving = false;
+    cups.forEach(c => {
+      if (!c.moving) return; moving = true;
+      c.vy += .0022 * sd; c.x += c.vx * sd; c.y += c.vy * sd; c.a += c.va * sd;
+      if (c.y >= 780) { c.y = 780; if (c.vy > .08) c.vy *= -.35; else c.vy = 0; c.vx *= .7; c.va *= .6; }
+      if (c.x > 1560) { c.x = 1560; c.vx *= -.3; }
+      if (c.y === 780 && !c.vy && Math.abs(c.vx) < .01) { c.moving = false; c.a = Math.round(c.a / 90) * 90; }
+    });
+    if (!moving && knocked && !settledShot) {
+      settledShot = true; re.hidden = false;
+      coach('#b4', '와르르! 공기 도넛이 컵 탑을 <b>밀어서</b> 넘어뜨렸어요!<br>안개는 공기의 모양을 보여 줄 뿐, 민 것은 <b>공기</b>예요.');
+      finish(3, '#c4');
+    }
+    cupsG.innerHTML = cups.map(c => `<g transform="translate(${c.x.toFixed(1)} ${c.y.toFixed(1)}) rotate(${c.a.toFixed(1)} 0 -44)">
+      <path d="M-38 0 L38 0 L28 -88 L-28 -88Z" fill="#fff" stroke="#c9363c" stroke-width="5" stroke-linejoin="round"/>
+      <path d="M-35 -22 L35 -22 L33 -34 L-33 -34Z" fill="#ff5a5f"/><ellipse cy="-88" rx="28" ry="7" fill="#ffe6e6" stroke="#c9363c" stroke-width="4"/></g>`).join('');
+  });
+})();
+
+/* =========== 5. 바람? 공기압? =========== */
+(() => {
+  const ICON = {
+    pin: `<path d="M50 50 V97" stroke="#9b6b3c" stroke-width="6" stroke-linecap="round"/><path d="M50 50 L50 10 Q74 18 50 50Z" fill="#ff5a5f"/><path d="M50 50 L90 50 Q82 74 50 50Z" fill="#ffd666"/><path d="M50 50 L50 90 Q26 82 50 50Z" fill="#4aa8ef"/><path d="M50 50 L10 50 Q18 26 50 50Z" fill="#7fd6b0"/><circle cx="50" cy="50" r="6" fill="#fff" stroke="#9aa8b5" stroke-width="2"/>`,
+    boat: `<path d="M4 34 h20 M2 46 h24" stroke="#7cc4ee" stroke-width="4" stroke-linecap="round"/><path d="M52 14 V68" stroke="#8a5d2a" stroke-width="4"/><path d="M55 16 Q86 40 55 64Z" fill="#fff" stroke="#3a9ae0" stroke-width="3"/><path d="M16 68 H86 L74 84 H28Z" fill="#c98a4b"/><path d="M4 92 q12 -7 23 0 t23 0 t23 0 t23 0" stroke="#3a9ae0" stroke-width="4" fill="none"/>`,
+    seed: `<path d="M4 30 h18 M6 44 h14" stroke="#7cc4ee" stroke-width="4" stroke-linecap="round"/><g transform="rotate(22 52 60)"><path d="M52 40 V78" stroke="#a7b3a0" stroke-width="2.5"/><path d="M49 78 L52 92 L55 78Z" fill="#8a5d2a"/><path d="M52 40 L31 33 M52 40 L36 25 M52 40 L43 20 M52 40 V18 M52 40 L61 20 M52 40 L68 25 M52 40 L73 33" stroke="#b9c2cc" stroke-width="2"/><g fill="#fff" stroke="#b9c2cc" stroke-width="1.5"><circle cx="31" cy="33" r="3.5"/><circle cx="36" cy="25" r="3.5"/><circle cx="43" cy="20" r="3.5"/><circle cx="52" cy="18" r="3.5"/><circle cx="61" cy="20" r="3.5"/><circle cx="68" cy="25" r="3.5"/><circle cx="73" cy="33" r="3.5"/></g></g>`,
+    wash: `<path d="M2 20 Q50 32 98 20" stroke="#8a6d4b" stroke-width="3" fill="none"/><path d="M4 50 h14 M2 62 h18" stroke="#7cc4ee" stroke-width="4" stroke-linecap="round"/><g transform="rotate(-12 56 50)"><path d="M36 26 L48 25 Q56 32 64 25 L76 26 L90 40 L81 48 L75 42 L76 84 L38 84 L39 42 L32 48 L24 40Z" fill="#ff8a7a" stroke="#d63a40" stroke-width="2.5"/></g><rect x="44" y="20" width="5" height="12" fill="#ffd666"/><rect x="66" y="21" width="5" height="12" fill="#ffd666"/>`,
+    balloon: `<ellipse cx="50" cy="44" rx="25" ry="32" fill="#ff5a5f" stroke="#d63a40" stroke-width="3"/><path d="M46 76 h8 l-2 6 h-4z" fill="#d63a40"/><ellipse cx="41" cy="30" rx="5" ry="9" fill="#fff" opacity=".5"/><ellipse cx="16" cy="46" rx="11" ry="15" fill="#fff" stroke="#b9c2cc" stroke-width="3"/><ellipse cx="84" cy="46" rx="11" ry="15" fill="#fff" stroke="#b9c2cc" stroke-width="3"/>`,
+    wheel: `<circle cx="50" cy="50" r="38" fill="none" stroke="#3b4652" stroke-width="11"/><circle cx="50" cy="50" r="30" fill="none" stroke="#c4ccd6" stroke-width="3"/><path d="M50 20 V80 M20 50 H80 M29 29 L71 71 M71 29 L29 71" stroke="#c4ccd6" stroke-width="2"/><circle cx="50" cy="50" r="6" fill="#9aa8b5"/><rect x="66" y="16" width="6" height="10" rx="2" fill="#ffd666" transform="rotate(35 69 21)"/>`,
+    tube: `<circle cx="50" cy="52" r="32" fill="none" stroke="#fff" stroke-width="22"/><circle cx="50" cy="52" r="32" fill="none" stroke="#ff5a5f" stroke-width="22" stroke-dasharray="25.1 25.1"/><circle cx="50" cy="52" r="43" fill="none" stroke="#c9363c" stroke-width="2"/><circle cx="50" cy="52" r="21" fill="none" stroke="#c9363c" stroke-width="2"/><path d="M28 34 Q34 26 44 24" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" opacity=".8"/>`,
+    wrap: `<rect x="10" y="16" width="80" height="70" rx="8" fill="#e9f6ff" stroke="#9cc9e6" stroke-width="3"/><g fill="#fff" stroke="#9cc9e6" stroke-width="2.5">${[0, 1, 2, 3].map(r => [0, 1, 2, 3].map(c => `<circle cx="${23 + c * 18}" cy="${29 + r * 15}" r="6.5"/>`).join('')).join('')}</g><ellipse cx="74" cy="12" rx="9" ry="12" fill="#ffd9b8" stroke="#e8b48c" stroke-width="2.5"/>`
+  };
+  const ITEMS = [
+    { id: 'pin', name: '돌아가는 바람개비', k: 'wind', ok: '딩동댕! 움직이는 바람이 날개를 밀어서 바람개비가 빙글빙글 돌아요.', no: '음, 다시 볼까요? 바람개비는 <b>바람이 불 때</b> 돌아요.' },
+    { id: 'boat', name: '바람에 나아가는 돛단배', k: 'wind', ok: '딩동댕! 바람이 돛을 밀어서 배가 앞으로 나아가요.', no: '음, 다시 볼까요? 돛단배는 <b>바람이 돛을 밀어서</b> 움직여요.' },
+    { id: 'seed', name: '날아가는 민들레 씨', k: 'wind', ok: '딩동댕! 바람이 솜털 씨앗을 밀어서 멀리멀리 날아가요.', no: '음, 다시 볼까요? 민들레 씨는 <b>바람을 타고</b> 날아가요.' },
+    { id: 'wash', name: '펄럭이는 빨래', k: 'wind', ok: '딩동댕! 바람이 빨래를 밀어서 펄럭펄럭 흔들려요.', no: '음, 다시 볼까요? 빨래는 <b>바람이 불 때</b> 펄럭여요.' },
+    { id: 'balloon', name: '누르면 손을 밀어내는 빵빵한 풍선', k: 'press', ok: '딩동댕! 풍선 속에 갇힌 공기를 누르면 공기압이 커져서 손을 밀어내요.', no: '음, 다시 볼까요? 풍선 속에는 공기가 <b>갇혀 있어요</b>.' },
+    { id: 'wheel', name: '공기를 넣어 빵빵해진 자전거 바퀴', k: 'press', ok: '딩동댕! 바퀴 속에 꽉 눌린 공기가 밀어내서 바퀴가 탱탱해요.', no: '음, 다시 볼까요? 바퀴 속에는 공기가 <b>꽉 눌려 갇혀</b> 있어요.' },
+    { id: 'tube', name: '공기를 넣어 빵빵해진 튜브', k: 'press', ok: '딩동댕! 튜브 속에 눌린 공기가 밀어내서 빵빵해요.', no: '음, 다시 볼까요? 튜브 속에는 공기가 <b>꽉 눌려 갇혀</b> 있어요.' },
+    { id: 'wrap', name: '꾹 누르면 손을 밀어내는 뽁뽁이', k: 'press', ok: '딩동댕! 작은 방울 속 공기를 누르면 공기압이 커져서 손을 밀어내요.', no: '음, 다시 볼까요? 뽁뽁이 방울 속에는 공기가 <b>갇혀 있어요</b>.' }
+  ];
+  const tray = $('#tray'), fb = $('#fb5'), bins = $$('.bin'), re = $('#re5');
+  const inside = (el, e) => { const r = el.getBoundingClientRect(); return e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom; };
+  function say(t, good) { fb.className = 'qfb'; void fb.offsetWidth; fb.className = 'qfb ' + (good ? 'good' : 'bad'); fb.innerHTML = `<span>${t}</span>`; }
+  function build() {
+    tray.innerHTML = ''; $$('.got').forEach(g => g.innerHTML = ''); re.hidden = true;
+    fb.className = 'qfb'; fb.textContent = '그림을 손가락으로 끌어 보세요!';
+    ITEMS.slice().sort(() => Math.random() - .5).forEach(it => {
+      const d = document.createElement('div'); d.className = 'qcard'; d.it = it;
+      d.innerHTML = `<svg viewBox="0 0 100 100">${ICON[it.id]}</svg><span>${it.name}</span>`;
+      drag(d); tray.appendChild(d);
+    });
+  }
+  function drag(d) {
+    let sx = 0, sy = 0, on = false;
+    const back = () => { d.classList.add('back'); d.style.transform = ''; };
+    d.addEventListener('pointerdown', e => {
+      if (d.classList.contains('placed')) return;
+      e.preventDefault(); audio(); d.setPointerCapture(e.pointerId); on = true; sx = e.clientX; sy = e.clientY;
+      d.classList.add('drag'); d.classList.remove('back'); sfx.pop();
+    });
+    d.addEventListener('pointermove', e => {
+      if (!on) return;
+      d.style.transform = `translate(${e.clientX - sx}px,${e.clientY - sy}px) scale(1.08)`;
+      bins.forEach(b => b.classList.toggle('over', inside(b, e)));
+    });
+    d.addEventListener('pointerup', e => {
+      if (!on) return; on = false; d.classList.remove('drag'); bins.forEach(b => b.classList.remove('over'));
+      const bin = bins.find(b => inside(b, e));
+      if (!bin) return back();
+      if (bin.dataset.k === d.it.k) {
+        d.style.transform = ''; d.classList.add('placed'); bin.querySelector('.got').appendChild(d);
+        sfx.good(); sparkle(e.clientX, e.clientY, 16); say(d.it.ok, true);
+        if (!tray.children.length) {
+          coach('#b5', '모두 맞혔어요! 바람은 <b>움직이는 공기</b>가 밀고,<br>빵빵한 물건은 <b>눌린 공기</b>가 밀어내요.');
+          re.hidden = false; finish(4, '#c5');
+        }
+      } else { back(); sfx.bad(); say(d.it.no, false); }
+    });
+    d.addEventListener('pointercancel', () => { on = false; d.classList.remove('drag'); back(); });
+  }
+  re.onclick = () => { build(); sfx.pop(); };
+  build();
+})();
+</script>
+</body>
+</html>
